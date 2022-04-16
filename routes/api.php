@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\InspectorController;
+use App\Http\Controllers\TransportBookingController;
+use App\Http\Controllers\EventBookingController;
+use App\Http\Controllers\MoveOutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,3 +42,15 @@ Route::post('inspector/discount', [InspectorController::class, 'getADiscount']);
 Route::get('inspector/events-all', [InspectorController::class, 'getAllEvents']);
 Route::post('inspector/addevents', [InspectorController::class, 'addEvents']);
 Route::post('inspector/deleteevent', [InspectorController::class, 'deleteEvent']);
+Route::post('users/userevents', [EventBookingController::class, 'geteventsbooked']);
+
+
+//TICKETS
+Route::post('users/addtickets', [TransportBookingController::class, 'addTickets']);
+Route::get('users/gettickets-all', [TransportBookingController::class, 'index']);
+Route::post('users/user-ticket', [TransportBookingController::class, 'gettickets_of_user']);
+
+//MOVEOUTS
+Route::post('users/request-moveout', [MoveOutController::class, 'putRequest']);
+Route::post('inspector/approve-moveout', [MoveOutController::class, 'approveRequest']);
+Route::get('inspector/get-moveout', [MoveOutController::class, 'getmoveouts']);

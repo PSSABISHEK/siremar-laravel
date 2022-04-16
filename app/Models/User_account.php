@@ -17,6 +17,12 @@ class User_account extends Authenticatable
      *
      * @var array<int, string>
      */
+
+
+    public function transport_booking(){
+        return $this->hasMany(Transport_booking::class);
+    }
+
     protected $fillable = [
         'user_id',
         'fname',
