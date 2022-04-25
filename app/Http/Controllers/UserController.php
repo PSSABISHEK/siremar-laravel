@@ -11,7 +11,8 @@ class UserController extends Controller
 {
     //
 
-    function getData(){
+    function getData()
+    {
         return User_account::all();
     }
 
@@ -38,16 +39,17 @@ class UserController extends Controller
             if (!is_null($password_status)) {
                 $user = $this->userDetail($request->user_id);
 
-                return response()->json(['status' => 200, 'message' => "You have logged in successfully", "username" => $user->user_id, "user_role" => $user->user_role]);
+                return response()->json(['status' => 200, 'message' => "You have logged in successfully", "id" => $user->user_id, "fname" => $user->fname, "lname" => $user->lname, "user_role" => $user->user_role]);
             } else {
                 return response()->json(['status' => 500, 'message' => 'Unable to login. Incorrect password.']);
             }
         } else {
-            return response()->json(['status' => 500,'message' => 'Unable to login. Email does not exist']);
+            return response()->json(['status' => 500, 'message' => 'Unable to login. Email does not exist']);
         }
     }
-    
-    public function userDetail($user_id) {
+
+    public function userDetail($user_id)
+    {
         $user = array();
         if ($user_id != "") {
             $user = User_account::where("user_id", $user_id)->first();
@@ -55,62 +57,57 @@ class UserController extends Controller
         }
     }
 
-    public function register(Request $req) {
-        $fields  = Validator::make($req->all(),[
-            'user_id'=>'required',
-            'email_id'=>'required',
-            'fname'=>'required',
-            'lname'=>'required',
-            'birth_place'=>'required',
-            'dob'=>'required',
-            'address'=>'required',
-            'apt_no'=>'required',
-            'pwd'=>'required',
-            'proof_url'=>'required',
-            'user_role'=>'required',
+    public function register(Request $req)
+    {
+        $fields = Validator::make($req->all(), [
+            'user_id' => 'required',
+            'email_id' => 'required',
+            'fname' => 'required',
+            'lname' => 'required',
+            'birth_place' => 'required',
+            'dob' => 'required',
+            'address' => 'required',
+            'apt_no' => 'required',
+            'pwd' => 'required',
+            'proof_url' => 'required',
+            'user_role' => 'required',
         ]);
 
-        $lenght = Validator::make($req->all(),[
-            'fname'=>'max:50',
-            'lname'=>'max:50',
+        $lenght = Validator::make($req->all(), [
+            'fname' => 'max:50',
+            'lname' => 'max:50',
         ]);
 
-        $pass = Validator::make($req->all(),[
-            'pwd'=>'max:50',
+        $pass = Validator::make($req->all(), [
+            'pwd' => 'max:50',
         ]);
 
-        $email = Validator::make($req->all(),[
-            'email_id'=>'email'
+        $email = Validator::make($req->all(), [
+            'email_id' => 'email'
         ]);
 
-        if($fields->fails()) {
+        if ($fields->fails()) {
             return response()->json([
-                'status'=>422,
-                'message'=>'All fields are required'
+                'status' => 422,
+                'message' => 'All fields are required'
             ]);
-        }
-
-        else if($lenght->fails()) {
+        } else if ($lenght->fails()) {
             return response()->json([
-                'status'=>422,
-                'message'=>'First Name and Last Name max length is 50 characters. Please Check Your Input'
-                    ]);
-        }
-        else if($pass->fails()) {
+                'status' => 422,
+                'message' => 'First Name and Last Name max length is 50 characters. Please Check Your Input'
+            ]);
+        } else if ($pass->fails()) {
             return response()->json([
-                'status'=>422,
-                'message'=>'Password max length is 50 characters. Please Check Your Input'
-                    ]);
-        }
-        else if($email->fails()) {
+                'status' => 422,
+                'message' => 'Password max length is 50 characters. Please Check Your Input'
+            ]);
+        } else if ($email->fails()) {
             return response()->json([
-                'status'=>422,
-                'message'=>'The email must be a valid email address',
-                'errors'=>$email->messages(),
-                    ]);
-        }
-
-        else {
+                'status' => 422,
+                'message' => 'The email must be a valid email address',
+                'errors' => $email->messages(),
+            ]);
+        } else {
             $user_status = User_account::where("user_id", $req->user_id)->first();
             if (is_null($user_status)) {
                 $user = new User_account;
@@ -127,41 +124,43 @@ class UserController extends Controller
                 $user->user_role = $req->input('user_role');
                 $user->save();
                 return response()->json([
-                    'status'=>200,
-                    'message'=>'User Created Successfully',
+                    'status' => 200,
+                    'message' => 'User Created Successfully',
                 ]);
             } else {
                 return response()->json([
-                    'status'=>422,
-                    'message'=>'User Already Exists',
+                    'status' => 422,
+                    'message' => 'User Already Exists',
                 ]);
             }
         }
     }
 
-    public function approveUser(Request $req){
+    public function approveUser(Request $req)
+    {
         try {
             $user = $this->userDetail($req->user_id);
             $user->is_active = "1";
             $user->update($req->all());
             return response()->json([
-                'status'=>200,
-                'message'=>'user Updated Successfully',
+                'status' => 200,
+                'message' => 'user Updated Successfully',
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'status'=>422,
-                'message'=>'Error has occured'
+                'status' => 422,
+                'message' => 'Error has occured'
             ]);
-        }   
+        }
 
     }
 
-    public function getUserDetails(Request $req){
+    public function getUserDetails(Request $req)
+    {
         $user = $this->userDetail($req->user_id);
         return response()->json([
-            'status'=>200,
-            'message'=> $user,
+            'status' => 200,
+            'message' => $user,
         ]);
     }
 }
