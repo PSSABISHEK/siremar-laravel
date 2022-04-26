@@ -31,20 +31,25 @@ class UserController extends Controller
             return response()->json(['status' => 422, 'message' => 'All fields are required']);
         }
 
-        $email_status = User_account::where("user_id", $request->user_id)->first();
+        $email_status = User_account::where("user_id", $request->user_id)->where("user_role", $request->user_role)->first();
 
         if (!is_null($email_status)) {
-            $password_status = User_account::where("user_id", $request->user_id)->where("pwd", $request->password)->first();
+            $active_status = User_account::where("user_id", $request->user_id)->where("is_active", 1)->first();
+            if (!is_null($active_status)) {
+                $password_status = User_account::where("user_id", $request->user_id)->where("pwd", $request->password)->first();
 
-            if (!is_null($password_status)) {
-                $user = $this->userDetail($request->user_id);
+                if (!is_null($password_status)) {
+                    $user = $this->userDetail($request->user_id);
 
-                return response()->json(['status' => 200, 'message' => "You have logged in successfully", "id" => $user->user_id, "fname" => $user->fname, "lname" => $user->lname, "user_role" => $user->user_role]);
+                    return response()->json(['status' => 200, 'message' => "You have logged in successfully", "id" => $user->user_id, "fname" => $user->fname, "lname" => $user->lname, "user_role" => $user->user_role]);
+                } else {
+                    return response()->json(['status' => 500, 'message' => 'Unable to login. Incorrect password.']);
+                }
             } else {
-                return response()->json(['status' => 500, 'message' => 'Unable to login. Incorrect password.']);
+                return response()->json(['status' => 500, 'message' => 'Activation Pending!!! Please do visit Siremar Office to start using our services.']);
             }
         } else {
-            return response()->json(['status' => 500, 'message' => 'Unable to login. Email does not exist']);
+            return response()->json(['status' => 500, 'message' => 'Unable to login. Email does not exist.']);
         }
     }
 

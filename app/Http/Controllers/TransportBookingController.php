@@ -121,7 +121,22 @@ class TransportBookingController extends Controller
             return response()->json([
                 'status'=>200,
                 'message'=>$user_tickets,
-            ]); 
+            ]);
+        } else {
+            return response()->json([
+                'status'=>422,
+                'message'=>'No data found',
+            ]);
+        }
+    }
+
+    public function gettickets(Request $req){
+        $user_tickets = Transport_booking::where(["type"=>$req->transport_type])->get();
+        if (count($user_tickets) > 0) {
+            return response()->json([
+                'status'=>200,
+                'message'=>$user_tickets,
+            ]);
         } else {
             return response()->json([
                 'status'=>422,

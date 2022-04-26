@@ -49,6 +49,7 @@ Route::post('users/userevents', [EventBookingController::class, 'geteventsbooked
 Route::post('users/addtickets', [TransportBookingController::class, 'addTickets']);
 Route::get('users/gettickets-all', [TransportBookingController::class, 'index']);
 Route::post('users/user-ticket', [TransportBookingController::class, 'gettickets_of_user']);
+Route::post('admin/tickets', [TransportBookingController::class, 'gettickets']);
 
 //MOVEOUTS
 Route::post('users/request-moveout', [MoveOutController::class, 'putRequest']);
